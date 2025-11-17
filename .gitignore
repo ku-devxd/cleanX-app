@@ -1,0 +1,65 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+instance/
+.env
+.venv/
+venv/
+env/
+*.db
+*.log
+
+# ---- FastAPI / Uvicorn / Alembic ----
+alembic.ini
+alembic/
+*.pid
+
+# ---- VSCode ----
+.vscode/
+.settings/
+
+# ---- macOS ----
+.DS_Store
+
+# ---- Git ----
+*.orig
+
+# ---- Flutter ----
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+
+# Android
+**/android/.gradle
+**/android/captures/
+**/android/.idea/
+**/android/local.properties
+**/android/app/*.keystore
+**/android/key.properties
+**/android/app/release/
+
+# iOS
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/.last_build_id
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+build/
+web/.dart_tool/
+
+# ---- Node (если появится фронт) ----
+node_modules/
+
+# ---- Logs ----
+*.log
+logs/

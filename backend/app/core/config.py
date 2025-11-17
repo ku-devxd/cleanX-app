@@ -1,15 +1,10 @@
-from pydantic_settings import BaseSettings
-from pydantic import Field
-# 🧩 Здесь хранятся все настройки проекта (БД, JWT, секреты)
-class Settings(BaseSettings):
-    DATABASE_URL: str = Field(..., env="DATABASE_URL")
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 1 день
+# app/core/config.py (минимальная версия)
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-    class Config:
-        env_file = ".env"
-
-settings = Settings()
-# Теперь настройки можно импортировать из любого места в проекте через:
-# from app.core.config import settings
+SECRET_KEY = os.getenv("SECRET_KEY", "REPLACE_ME_SUPER_SECRET")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "15"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "30"))
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://dry_user:12345@localhost:5432/dryclean_core")

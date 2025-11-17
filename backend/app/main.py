@@ -1,32 +1,34 @@
 from fastapi import FastAPI
+from app.db.session import engine
+from app.db.base import Base
+from app.routers import auth
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.base import Base
-from app.db.session import engine
-from app.routers import auth
-from app.db.models import User
+app = FastAPI(title="dry_clean API")
 
-app = FastAPI(
-    title="DryClean API",
-    version="1.0",
-    description="Backend для приложения химчистки DryClean 🚀",
-)
+# создаём таблицы (для dev). Для production используй Alembic.
+Base.metadata.create_all(bind=engine)
 
-# ✅ CORS для Flutter и Web
+
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5000",
+    "http://127.0.0.1:5000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "*",  # если хочешь разрешить ВСЕ (можно для разработки)
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # можно указать ["http://localhost:52749"] для Chrome
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Автоматическое создание таблиц (если не используешь Alembic)
-Base.metadata.create_all(bind=engine)
-
-# ✅ Подключаем роутеры
 app.include_router(auth.router)
-
-@app.get("/")
-def root():
-    return {"message": "DryClean API работает 🚀"}

@@ -3,9 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from app.db.session import SessionLocal
 from app.db import models
-from app.schemas.user_schema import UserCreate, UserOut  # ваши схемы
+from app.schemas.user_schema import UserCreate, UserOut
 from app.schemas.token_schema import Token
 from app.utils.hashing import hash_password, verify_password
 from app.core.security import create_access_token, create_refresh_token, verify_refresh_token
@@ -18,12 +17,8 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
-def get_db_dep():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -58,11 +53,11 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     return {"access_token": access, "refresh_token": refresh, "token_type": "bearer"}
 
 @router.post("/refresh", response_model=Token)
-def refresh_token(payload: dict, db: Session = Depends(get_db)):
+def refresh_token(request: RefreshTokenRequest, db: Session = Depends(get_db)):
     """
-    Expecting JSON body: {"refresh_token": "<token>"}
+    Обновляет access и refresh токены используя refresh_token
     """
-    token = payload.get("refresh_token")
+    token = request.refresh_token
     if not token:
         raise HTTPException(status_code=400, detail="Missing refresh_token")
 
